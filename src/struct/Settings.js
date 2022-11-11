@@ -1,3 +1,4 @@
+// Thanks Miyako (https://github.com/ravener/miyako) for this piece of code!
 const { mergeDefault } = require("discord.js");
 
 /**
