@@ -1,0 +1,40 @@
+{
+  "name": "neko",
+  "version": "0.5-alpha",
+  "description": "A random Discord bot.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node src/main",
+    "test": "node src/main --dev"
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheFateAkira/Neko"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord bot"
+  ],
+  "author": "Akira#0850",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "0.27.2",
+    "discord.js": "^14.1.2",
+    "dotenv": "^16.0.0",
+    "erela.js": "github:MenuDocs/erela.js#build",
+    "he": "^1.2.0",
+    "html-to-markdown": "^1.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.3",
+    "moment-duration-format": "^2.3.2",
+    "mongodb": "^3.6.0",
+    "node-fetch": "^2.6.7",
+    "relevant-urban": "^2.0.0",
+    "saucenao.js": "^1.0.5"
+  }
+}
