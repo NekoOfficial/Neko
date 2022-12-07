@@ -8,7 +8,7 @@
 
 ## About this project
 
-This is the official repository for the Neko Discord bot. All changes made to the bot are first updated here then pushed to production code.
+This is the official repository for the Neko Discord bot. ~~All changes made to the bot are first updated here then pushed to production code.~~ **Public** changes to the bot will be considered pushing here after 2-3 days of work. Private updates, including music module, will **not** receive updates, in this repo. Removal of data will still happen if eligible.
 
 I made this repo since I keep losing files out of nowhere, so the code wouldn't just die.
 
