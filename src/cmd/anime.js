@@ -723,7 +723,7 @@ module.exports = class Eval extends Command {
         if (m.ageRatingGuide && (m.ageRatingGuide.includes("Nudity") || m.ageRatingGuide.includes("Mature")) && !i.channel.nsfw) return i.editReply({ content: "Uh, that has something to do with NSFW and you're not in a NSFW channel. I'm not allowed to send that here!" });
         // Now make our embed
         const embed = new EmbedBuilder()
-          .setTitle(m.titles.en) // Use English title
+          .setTitle(`${m.titles.en}`) // Use English title
           .setURL(`https://kitsu.io/${json.data[0].id}`) // Set the URL for title
           .setThumbnail(m.posterImage.original)
           .setDescription(
