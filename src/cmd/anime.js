@@ -604,7 +604,7 @@ module.exports = class Eval extends Command {
       const hentaiCategories = ["ass", "bdsm", "cum", "doujin", "femdom", "hentai", "maid", "maids", "netorare", "gif", "orgy", "pussy", "panties", "blowjob", "ugly", "foxgirl", "uniform", "gangbang", "glasses", "tentacles", "masturbation", "yuri", "succubus", "school", "zettai-ryouiki"];
       if (!i.channel.nsfw) return i.editReply({ content: "You baka, move to an NSFW channel to execute this one." });
       if (!hentaiCategories.includes(query)) return i.editReply({ content: `First time, huh? Here, these are things that you can do.\n\n**Valid categories:** ${client.util.joinArray(hentaiCategories)}.` });
-      await fetch(`https://akaneko-api.herokuapp.com/api/${query}`).then(res => res.json()).then(json => {
+      await fetch(`https://cuteasfubuki.cf/api/${query}`).then(res => res.json()).then(json => {
         i.editReply({
           content: "Here you go.", embeds: [new EmbedBuilder()
             .setColor("#fcff57")
