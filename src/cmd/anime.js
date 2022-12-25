@@ -334,19 +334,17 @@ module.exports = class Eval extends Command {
         i.editReply({ embeds: [embed] });
       })
     }
-    else if (sub == "meme") {
-      await fetch(`https://meme-api.herokuapp.com/gimme/animemes`,
-        { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => {
-          const meme = new EmbedBuilder()
-            .setTitle(`**${json.title}**`)
-            .setURL(json.postLink)
-            .setDescription(`*Posted by **${json.author}***`)
-            .setImage(json.url)
-            .setColor("#fcff57")
-            .setTimestamp()
-            .setFooter({ text: `${json.ups} likes`, iconURL: i.member.user.displayAvatarURL({ dynamic: true }) });
-          i.editReply({ embeds: [meme] })
-        });
+    else if (sub == "meme") { 
+      await fetch(`https://meme.eiri.ga/animemes`, { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => { 
+        const meme = new EmbedBuilder() 
+          .setTitle(`**${json.title}**`) 
+          .setURL(json.meme.url) 
+          .setDescription(`*Posted by **${json.author}***`) 
+          .setImage(json.meme.image) 
+          .setColor("#fcff57") 
+          .setTimestamp() 
+          .setFooter({ text: `${json.upVotes} likes`, iconURL: i.member.user.displayAvatarURL({ dynamic: true }) }); 
+        i.editReply({ embeds: [meme] }) }); 
     }
     else if (sub == "quote") {
       await fetch(`https://animechan.vercel.app/api/random`).then(res => res.json()).then(json => {
