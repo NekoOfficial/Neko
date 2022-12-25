@@ -118,21 +118,20 @@ module.exports = class Fun extends Command {
         ]
         const cancelled = cancelResponse[Math.floor(Math.random() * cancelResponse.length)] + "\n\n||Execute the command again.||"
         if (cancelRate) return i.editReply({ content: cancelled })
-        await fetch(`https://meme-api.herokuapp.com/gimme/${query ? query : "wholesomememes"}`,
+        await fetch(`https://meme.eiri.ga/gimme/${query ? query : "random"}`,
           { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => {
-            if (json.code == 404) return i.editReply({ content: "U-Uh, just coming here to say that this subreddit has no posts or doesn't exist." });
+            if (json.err) return i.editReply({ content: "U-Uh, just coming here to say that this subreddit has no posts or doesn't exist." });
             // Pseudo-cancel. This can be avoided by getting into a NSFW channel.
             if (json.nsfw === true && !i.channel.nsfw) return i.editReply({ content: cancelled })
 
             const meme = new EmbedBuilder()
               .setTitle(`**${json.title}**`)
-              .setURL(json.postLink)
-              .setDescription(`*Posted in **r/${json.subreddit}** by **${json.author}***`)
-              .setImage(json.url)
+              .setURL(json.meme.url)
+              .setDescription(`*Posted in **r/${query ? query : json.randomKey}** by **${json.author}***`)
+              .setImage(json.meme.image)
               .setColor("#fcff57")
               .setTimestamp()
-              .setFooter({ text: `${json.ups} likes`, iconURL: i.member.user.displayAvatarURL({ dynamic: true }) });
-
+              .setFooter({ text: `${json.upVotes} likes`, iconURL: i.member.user.displayAvatarURL({ dynamic: true }) });
             i.editReply({ embeds: [meme] })
           })
         break;
