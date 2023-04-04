@@ -6,6 +6,12 @@
   </a>
 </p>
 
+## Quick notice!
+
+This repository is now **deprecated**. That means it will receive no more updates, no more security fixes, no more feature that might be active in the future. A new version is currently being worked on, which will fix most of the management issues of this old version.
+
+The version here still works, but you might have to deal with a lot of missing things and codes. I will not be assisting you in that process.
+
 ## About this project
 
 This is the official repository for the Neko Discord bot. ~~All changes made to the bot are first updated here then pushed to production code.~~ **Public** changes to the bot will be considered pushing here after 2-3 days of work. Private updates, including music module, will **not** receive updates, in this repo. Removal of data will still happen if eligible.
