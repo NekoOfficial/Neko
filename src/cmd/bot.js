@@ -3,48 +3,15 @@ const Command = require(`${process.cwd()}/src/struct/cmd/Command`);
 // For ping
 const pingmsg = ["Ugh, again? You always ask, and I tell you that I responded in **{{ms}}ms**.", "B-baka, I responded... just in **{{ms}}ms**.", "H-here you go, I responded in **{{ms}}ms**.", "Here you go, not that it was worth my time. It only took me **{{ms}}ms**.", "Is this right? I've responded in **{{ms}}ms**.", "**{{user}}**? I've responded in **{{ms}}ms**.", "**{{user}}**! You wasted **{{ms}}ms** of my time, ERGH", "D-did I do it right? I responded in **{{ms}}ms**.", "**{{user}}**, yes I'm here, and it took me **{{ms}}ms** to respond!", "**{{user}}**, why are you pinging me man! You wasted **{{ms}}ms** of my time!!", "Hey **{{user}}**, it took me **{{ms}}ms** to send this message", "You've made me **{{ms}}ms** older - just from asking.", "**{{user}}**, I've seen your message and it took me **{{ms}}ms** not to care.", "Do you know how long it took me to read that message? You pretty much wasted **{{ms}}ms** of my day!", "B-baka! I responded in **{{ms}}ms**! Are you happy now?"];
 // For eval
-const { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const { inspect } = require("util");
 const fetch = require("node-fetch");
+const { botImports } = require("../util/imports");
 
 module.exports = class Eval extends Command {
   constructor(client) {
     super(client, {
-      data: new SlashCommandBuilder()
-        .setName("bot")
-        .setDescription("Core commands.")
-        .addSubcommand(cmd => cmd
-          .setName("eval")
-          .setDescription("evaluate JS code. Only my sensei can do this!")
-          .addStringOption(option => option.setName("query").setDescription("The code to execute").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("ping")
-          .setDescription("test my message reaction by sending the time I reacted.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("terms")
-          .setDescription("read my neat version of Terms of Service.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("vote")
-          .setDescription("vote for me on top.gg to show some support!")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("feedback")
-          .setDescription("is anything wrong? Having good ideas? Share it!")
-          .addStringOption(option => option
-            .setName("type")
-            .setDescription("The type of this feedback")
-            .setRequired(true)
-            .addChoices(...[
-              { name: "issue", value: "Issue" },
-              { name: "suggestion", value: "Suggestion" }
-            ])
-          )
-          .addStringOption(option => option.setName("query").setDescription("The issue/suggestion you wanna send."))
-          .addAttachmentOption(option => option.setName("attachment").setDescription("Literally the attachment."))
-        ),
+      data: botImports,
       usage: "eval",
       category: "owner",
       permissions: ["Use Application Commands", "Send Messages", "Embed Links"]
@@ -204,6 +171,7 @@ module.exports = class Eval extends Command {
             body: JSON.stringify(query),
           }).then(res => res.json()).then(json => {
             // In case the API didn't wake up in time
+            // This is gonna be tiring to the user who actually does it but for my well-being, I have to
             if (!json[0][0]) {
               return i.editReply({ content: "O... Oh, the input checker hasn't woke up yet. Perhaps wait for a bit?\n\n||Ideally **30** seconds!||" })
             }

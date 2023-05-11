@@ -1,6 +1,6 @@
 // make this file minimum
 require("dotenv").config();
-require(`./struct/extend/Discord`);
+require(`./struct/extend`);
 
 const Client = require(`./struct/Client`);
 const c = require(`./config.js`);

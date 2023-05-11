@@ -2,12 +2,13 @@
 // After all this is what Neko's born to do
 // Base stuff first
 const Command = require(`${process.cwd()}/src/struct/cmd/Command`);
-const { EmbedBuilder, SlashCommandBuilder, GuildEmoji } = require("discord.js");
+const { EmbedBuilder, GuildEmoji } = require("discord.js");
+const { animeImports } = require("../util/imports");
 // Util goes after
 require("moment-duration-format");
 const { decode } = require("he");
 const { SauceNao } = require("saucenao.js");
-const sauce = new SauceNao({ api_key: process.env["SAUCENAO"] });
+const sauce = new SauceNao({ api_key: process.env.SAUCENAO });
 const moment = require("moment");
 const _ = require("lodash");
 const fetch = require("node-fetch");
@@ -20,147 +21,7 @@ const Discovery = require("../struct/anime/Discovery");
 module.exports = class Eval extends Command {
   constructor(client) {
     super(client, {
-      data: new SlashCommandBuilder()
-        .setName("anime")
-        .setDescription("Bawa, you baka.")
-        .addSubcommand(cmd => cmd
-          .setName("action")
-          .setDescription("Spams you with images where anime characters do stuff.")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("the thing that you want to be spammed with.")
-            .setRequired(true)
-            .addChoices(...[
-              // I tried anyway.
-              { name: 'bully', value: 'bully' }, { name: 'cry', value: 'cry' },
-              { name: 'awoo', value: 'awoo' }, { name: 'bonk', value: 'bonk' },
-              { name: 'yeet', value: 'yeet' }, { name: 'hug', value: 'hug' },
-              { name: 'lick', value: 'lick' }, { name: 'neko', value: 'neko' },
-              { name: 'pat', value: 'pat' }, { name: 'blush', value: 'blush' },
-              { name: 'slap', value: 'Slap' }, { name: 'wave', value: 'wave' },
-              { name: 'smile', value: 'smile' }, { name: 'smug', value: 'smug' },
-              { name: 'highfive', value: 'highfive' }, { name: 'wink', value: 'wink' },
-              { name: 'handhold', value: 'handhold' }, { name: "nom", value: "nom" },
-              { name: 'bite', value: 'bite' }, { name: "glomp", value: "glomp" },
-              { name: "kick", value: "kick" }, { name: 'happy', value: 'happy' },
-              { name: "poke", value: "poke" }, { name: 'dance', value: 'dance' },
-              { name: "cringe", value: "cringe" }
-            ])
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("alprofile")
-          .setDescription("find user profile on AniList.")
-          .addStringOption(option => option.setName("query").setDescription("...the username, of course.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("search")
-          .setDescription("search for anime series on kitsu.io")
-          .addStringOption(option => option.setName('query').setDescription('...the anime name, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("meme")
-          .setDescription("peaceful command, it won't cancel you like what /fun meme do.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("quote")
-          .setDescription("anime quotes, best stuff ever.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("random")
-          .setDescription("random anime recommendations")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("character")
-          .setDescription("search for a character on MyAnimeList")
-          .addStringOption(option => option.setName('query').setDescription('...the character name, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("discover")
-          .setDescription("randomly generated anime/manga lists for you")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("...the type, surely.")
-            .addChoices(...[
-              { name: "anime", value: "anime" },
-              { name: "manga", value: "manga" }
-            ])
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("hentai")
-          .setDescription("...well, obvious. In NSFW only!")
-          .addStringOption(option => option.setName('query').setDescription('...the image category. For safety reasons, options won\'t be shown.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("sauce")
-          .setDescription("oOoOh. In NSFW only!")
-          .addAttachmentOption(option => option.setName('image').setDescription('...the image you want to get the sauce, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("malprofile")
-          .setDescription("find user profile on MyAnimeList")
-          .addStringOption(option => option.setName('query').setDescription('...the profile name, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("manga")
-          .setDescription("search for a manga on kitsu.io")
-          .addStringOption(option => option.setName('query').setDescription('...the manga name, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("schedule")
-          .setDescription("show the list of currently airing anime today, or a given weekday")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("...literally the day.")
-            .addChoices(...[
-              { name: "Monday", value: "monday" },
-              { name: "Tuesday", value: "tuesday" },
-              { name: "Wednesday", value: "wednesday" },
-              { name: "Thursday", value: "thursday" },
-              { name: "Friday", value: "friday" },
-              { name: "Saturday", value: "saturday" },
-              { name: "Sunday", value: "sunday" }
-            ])
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("seiyuu")
-          .setDescription("search for seiyuu's on your favorite anime characters")
-          .addStringOption(option => option.setName('query').setDescription('...the seiyuu\'s name, of course.').setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("waifu")
-          .setDescription("expermental.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("watch")
-          .setDescription("add a new anime to watch for new episodes.")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("...literally the URL. You may use AniList or MyAnimeList.")
-            .setRequired(true)
-          )
-          .addChannelOption(option => option
-            .setName("channel")
-            .setDescription("The channel you'd like to receive the announcement.")
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("unwatch")
-          .setDescription("remove an anime from this server's watchlist.")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("...literally the URL. You may use AniList or MyAnimeList.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("watching")
-          .setDescription("view list of anime(s) this server subscribed to.")
-        ),
+      data: animeImports,
       cooldown: 10000,
       usage: "anime <command>",
       query: "anime",
@@ -299,6 +160,8 @@ module.exports = class Eval extends Command {
       // Check the query immediately before requesting.
       if (client.util.isProfane(query)) return i.editReply({ content: "Nah, I won't search for that one. Fix your wordings." });
       await fetch(`https://kitsu.io/api/edge/anime?filter[text]=${encodeURIComponent(query)}`).then(res => res.json()).then(json => {
+        // If there is no data, reply.
+        if (json.data.length == 0 || !json) return i.editReply({ content: "O-Oh, I don't remember seeing this. They told me they haven't, either.\n\n||Maybe fix your query?||" });
         // Didn't want to use a short name like this but I just want to simplyfy.
         const r = json.data[0].attributes;
         // If we can't find it, reply.
@@ -335,7 +198,7 @@ module.exports = class Eval extends Command {
       })
     }
     else if (sub == "meme") { 
-      await fetch(`https://meme.eiri.ga/animemes`, { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => { 
+      await fetch(`https://memeapi.tonycrafter.repl.co/animemes`, { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => { 
         const meme = new EmbedBuilder() 
           .setTitle(`**${json.title}**`) 
           .setURL(json.meme.url) 
@@ -426,6 +289,8 @@ module.exports = class Eval extends Command {
       };
       // Get the results from the data we've just fetch
       const { results: [{ mal_id }] } = charData;
+      // Another case mock
+      if (!mal_id) return i.editReply({ content: "Something went wrong while fetching the ID. Please notify my sensei about this!" });
       // Now fetch the character's information:
       const charRes = await fetch(`https://api.jikan.moe/v3/character/${mal_id}`).then(res => res.json());
       // Do the same with the real character data

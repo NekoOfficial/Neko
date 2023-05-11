@@ -1,57 +1,12 @@
 const Command = require(`${process.cwd()}/src/struct/cmd/Command`);
-const { EmbedBuilder, SlashCommandBuilder } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 const fetch = require("node-fetch")
+const { funImports } = require("../util/imports");
 
 module.exports = class Fun extends Command {
   constructor(client) {
     super(client, {
-      data: new SlashCommandBuilder()
-        .setName("fun")
-        .setDescription("Long list of subcommands for... fun.")
-        .addSubcommand(cmd => cmd
-          .setName("8ball")
-          .setDescription("Ask me anything.")
-          .addStringOption(option => option.setName("query").setDescription("just.. ask me.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("hololive")
-          .setDescription("Spams you with hololive images.")
-          .addStringOption(option => option
-            .setName("query")
-            .setDescription("the thing that you want to be spammed with.")
-            .setRequired(true)
-            .addChoices(...[
-              { name: 'suisei', value: 'suisei' }
-            ])
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName('fact')
-          .setDescription("Gives you a random fact. Mostly useless though.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName('today')
-          .setDescription("Gives you a random fact of today, in the past.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName('meme')
-          .setDescription("Gives you a random meme, with 10% chance cancelling you.")
-          .addStringOption(option => option.setName("query").setDescription("the subreddit name. If you just want to see average memes, skip."))
-        )
-        .addSubcommand(cmd => cmd
-          .setName('ship')
-          .setDescription("Ships 2 people you mention, with 5% faith in the lucky wheel.")
-          .addUserOption(option => option.setName("first").setDescription("...literally the first person.").setRequired(true))
-          .addUserOption(option => option.setName("second").setDescription("...literally the second person, duh!").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName('fortune')
-          .setDescription("Gives you a random fortune cookie's paper.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName('truth')
-          .setDescription("Gives you a random truth question, from the ol' truth or dare game.")
-        ),
+      data: funImports,
       usage: "fun <command>",
       category: "fun",
       cooldown: 5000
@@ -118,7 +73,7 @@ module.exports = class Fun extends Command {
         ]
         const cancelled = cancelResponse[Math.floor(Math.random() * cancelResponse.length)] + "\n\n||Execute the command again.||"
         if (cancelRate) return i.editReply({ content: cancelled })
-        await fetch(`https://meme.eiri.ga/gimme/${query ? query : "random"}`,
+        await fetch(`https://memeapi.tonycrafter.repl.co/gimme/${query ? query : "random"}`,
           { headers: { "content-type": 'application/json' } }).then(res => res.json()).then(json => {
             if (json.err) return i.editReply({ content: "U-Uh, just coming here to say that this subreddit has no posts or doesn't exist." });
             // Pseudo-cancel. This can be avoided by getting into a NSFW channel.

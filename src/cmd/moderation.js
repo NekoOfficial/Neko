@@ -1,140 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, GuildEmoji } = require("discord.js");
+const { EmbedBuilder, PermissionsBitField, GuildEmoji } = require("discord.js");
 const Command = require("../struct/cmd/Command");
+const { modImports } = require("../util/imports");
 
 module.exports = class Mod extends Command {
   constructor(client) {
     super(client, {
-      data: new SlashCommandBuilder().setName("moderation").setDescription("moderation tools, apart from Discord's built-in ones.")
-        .addSubcommand(cmd => cmd
-          .setName("warn")
-          .setDescription("warn a user, and log their infraction.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member to warn.")
-            .setRequired(true)
-          )
-          .addStringOption(option => option
-            .setName("reason")
-            .setDescription("...well, this is recommended to put in.")
-          )
-          .addBooleanOption(option => option
-            .setName("notify")
-            .setDescription("should I notify the user? Defaults to no.")
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("timeout")
-          .setDescription("timeout a user, and log it to their infraction data.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member to timeout.")
-            .setRequired(true)
-          )
-          .addIntegerOption(option => option
-            .setName("time")
-            .setDescription("...just the time for that timeout. Format is minute.")
-            .setRequired(true)
-          )
-          .addStringOption(option => option
-            .setName("reason")
-            .setDescription("...well, this is recommended to put in.")
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("untimeout")
-          .setDescription("untimeout a user.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("ban")
-          .setDescription("ban a user, and log it to their infraction data.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member to ban.")
-            .setRequired(true)
-          )
-          .addStringOption(option => option
-            .setName("reason")
-            .setDescription("...well, this is now enforced.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("unban")
-          .setDescription("unban a user.")
-          .addStringOption(option => option
-            .setName("id")
-            .setDescription("...just the user's ID.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("clear")
-          .setDescription("clear messages in this channel.")
-          .addIntegerOption(option => option
-            .setName("number")
-            .setDescription("...just the number of messages to delete. Max 99 and younger than 1 week.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("clone")
-          .setDescription("deletes a channel, then clone that channel with NO CONTENT in it.")
-          .addChannelOption(option => option
-            .setName("channel")
-            .setDescription("...literally the channel to clone.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("infractions")
-          .setDescription("check a member's rapsheet.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("kick")
-          .setDescription("kick a user, and log it to their infraction data.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member to kick.")
-            .setRequired(true)
-          )
-          .addStringOption(option => option
-            .setName("reason")
-            .setDescription("...well, this is now enforced.")
-            .setRequired(true)
-          )
-        )
-        .addSubcommand(cmd => cmd
-          .setName("unwarn")
-          .setDescription("delete an infraction, or all infractions of a given member.")
-          .addUserOption(option => option
-            .setName("member")
-            .setDescription("...just the server member to kick.")
-            .setRequired(true)
-          )
-          .addStringOption(option => option
-            .setName("type")
-            .setDescription("...just the action you want to take.")
-            .addChoices(...[
-              { name: "one", value: "one" },
-              { name: "all", value: "all" }
-            ])
-            .setRequired(true)
-          )
-          .addIntegerOption(option => option
-            .setName("index")
-            .setDescription("...if you chose \"one\", you'll need to specify this.")
-          )
-        ),
+      data: modImports,
       cooldown: 1000
     })
   }
@@ -179,6 +50,8 @@ module.exports = class Mod extends Command {
             i.editReply({ content: `Because you said no to notification, I'm not going to notify them!\n\nBy the way, they're having their **${client.util.ordinalize(user.settings.infraction)} warning**.` }).then(msg => setTimeout(() => msg.delete(), 5000)) :
           i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
+    // This is equivalent to "mute" - what we used to do before timeout released.
+    // Discord handled a HUGE part of this command, so I love this feature and will use it instead of muting
     } else if (sub == "timeout") {
       const time = i.options.getInteger("time") * 60000;
       // If time is less than 0 or more than 28 days
@@ -206,6 +79,7 @@ module.exports = class Mod extends Command {
       if (reason < 5 || reason > 500) return i.editReply({ content: "Hey, please maintain a reasonable length for the reason! The current limit is `more than 5 and less than 500 characters`." });
       // Now try to save "the thing"
       // First, safety step
+      // Initialize the user settings in the database first if it doesn't exist yet
       if (!user.settings) user.update({ infraction: 0, infraction_data: [] });
       const muteObj = (user.settings.infraction_data).concat([{ infractionBy: i.member.user.id, reason: reason, type: "TIMEOUT", at: Math.round(+new Date / 1000) }]);
       await user.update({ infraction: increment, infraction_data: [...new Set(muteObj)] }).then(() => {
@@ -214,6 +88,7 @@ module.exports = class Mod extends Command {
           i.editReply({ content: `<@${user.id}>, this is your **${client.util.ordinalize(user.settings.infraction)}** infraction! You've been **timed out** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason + `, for ${time / 60000} minute(s).`}\`\`\`` }) :
           i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
+      // We do this after confirmation to avoid dead cases
       user.timeout(time, reason);
     } else if (sub == "untimeout") {
       // Check if user is actually valid
@@ -223,6 +98,7 @@ module.exports = class Mod extends Command {
       // Now check if the specified user has a higher position than them
       if ((await i.guild.members.fetch(i.user.id)).roles.highest.position <= user.roles.highest.position) return i.editReply({ content: "It's just that you can't - you can't help them because their role is higher." });
       // Now check if they're timed out
+      // W... What a long name though
       if (!user.communicationDisabledUntilTimestamp) return i.editReply({ content: "Baka, they're not timed out." });
 
       user.timeout(null).then(() => {
@@ -260,7 +136,7 @@ module.exports = class Mod extends Command {
         // Confirm the update info
         (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
           user.send({ content: `<@${user.id}>, you've been **banned** from **${i.guild.name}** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Hammer has been thrown to <@${user.id}>. Lift it up sometime, sad to see them go.` })) :
-          i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
+          i.editReply({ content: "Oh... database said no to information saving, but they should be banned.\n\n||This database error didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
     } else if (sub == "clear") {
       // Uh shortcut
@@ -274,7 +150,7 @@ module.exports = class Mod extends Command {
       })
     } else if (sub == "clone") {
       const channel = i.options.getChannel("channel");
-      if ([i.guild.systemChannelId, i.guild.rulesChannelId, i.guild.publicUpdatesChannelId].includes(channel.id)) return i.editReply({ content: "Baka, that's a special channel. I can't clone that one!\n\n||**Special types of channels:** System, Rule and Public Update.||" })
+      if ([i.guild.systemChannelId, i.guild.rulesChannelId, i.guild.publicUpdatesChannelId].includes(channel.id)) return i.editReply({ content: "Baka, that's a special channel. I can't clone that one!\n\n||**Special types of channel:** System, Rule and Public Update.||" })
       const message = await i.editReply({ content: "I'm doing some job in the background, go get a cup of tea and wait until I respond again!" });
       const data = await channel.delete().catch(() => { });
       if (!data) return i.editReply({ content: "O.. Oh, something went wrong. I can't delete that channel.\n\nThis issue happens everywhere? **a)** Reconfigure my permissions!; **b)** Notice my sensei using `/bot feedback`!||" });
@@ -332,7 +208,7 @@ module.exports = class Mod extends Command {
           case terminate instanceof GuildEmoji ? terminate.name : terminate: collector.stop(); break;
         };
         if (page <= 0) { page = pages } else if (page > pages) { page = 1 };
-        embed.setDescription(`*Order type: Youngest to oldest infractions.*\n\n${results[page - 1]}`).setFooter({ text: `Wild cats should be trained! | Page ${page} of ${pages}`, iconURL: i.member.user.displayAvatarURL() });
+        embed.setDescription(`*Sort mode: Youngest to oldest infractions.*\n\n${results[page - 1]}`).setFooter({ text: `Wild cats should be trained! | Page ${page} of ${pages}`, iconURL: i.member.user.displayAvatarURL() });
         await msg.edit({ embeds: [embed] });
         await reaction.users.remove(i.member.user.id);
         timeout.refresh();
@@ -370,7 +246,7 @@ module.exports = class Mod extends Command {
         // Confirm the update info
         (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
           user.send({ content: `<@${user.id}>, you've been **kicked** from **${i.guild.name}** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Well, that was a pretty painful kick. <@${user.id}>, sad to see you go.` })) :
-          i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
+          i.editReply({ content: "Oh... database said no to information saving, but they should be kicked.\n\n||This database error didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
     } else if (sub == "unban") {
       const userID = i.options.getString("id");

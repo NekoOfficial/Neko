@@ -4,7 +4,8 @@ const { ActivityType } = require("discord.js")
 module.exports = async client => {
   // Setup stuff
   client.manager.init(client.user.id);
-  client.on("raw", d => client.manager.updateVoiceState(d));
+  // Music is not on GitHub anymore due to YouTube's recent action.
+  // client.on("raw", d => client.manager.updateVoiceState(d));
 
   // Roll presences
   if (!client.dev) {

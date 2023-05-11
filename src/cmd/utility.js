@@ -1,67 +1,14 @@
 const Command = require(`${process.cwd()}/src/struct/cmd/Command`);
-const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, GuildEmoji } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const moment = require("moment");
 const fetch = require("node-fetch");
 const urban = require("relevant-urban");
+const { utilImports } = require("../util/imports");
 
 module.exports = class Utility extends Command {
   constructor(client) {
     super(client, {
-      data: new SlashCommandBuilder()
-        .setName("utility")
-        .setDescription("The name says it all.")
-        .addSubcommand(cmd => cmd
-          .setName("avatar")
-          .setDescription("Display one's avatar.")
-          .addUserOption(option => option.setName("member").setDescription("...just the server member.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("urban")
-          .setDescription("The one dictionary you love.")
-          .addStringOption(option => option.setName("word").setDescription("...just the word you want to define.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("banner")
-          .setDescription("Display one's banner.")
-          .addUserOption(option => option.setName("member").setDescription("...just the server member.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("channel")
-          .setDescription("Display a channel's information.")
-          .addChannelOption(option => option.setName("channel").setDescription("...just the channel.").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("server")
-          .setDescription("Display this server's information.")
-        )
-        .addSubcommand(cmd => cmd
-          .setName("github")
-          .setDescription("Display a (public) GitHub repo's information.")
-          .addStringOption(option => option.setName("name").setDescription("Format: [repo owner]/[repo name].").setRequired(true))
-        )
-        .addSubcommand(cmd => cmd
-          .setName("npm")
-          .setDescription("Display an npm package's information.")
-          .addStringOption(option => option.setName("name").setDescription("...just the package's name.").setRequired(true))
-        )
-        .addSubcommandGroup(cmd => cmd
-          .setName("notepad")
-          .setDescription("A notepad, but you can do stuff with it.")
-          .addSubcommand(cmd => cmd
-            .setName("new")
-            .setDescription("Make a new notepad.")
-            .addStringOption(option => option.setName("name").setDescription("...just the note's name.").setRequired(true))
-            .addStringOption(option => option.setName("content").setDescription("...just the note's content. Max 125 characters.").setRequired(true))
-          )
-          .addSubcommand(cmd => cmd
-            .setName("view")
-            .setDescription("View your saved note file.")
-          )
-          .addSubcommand(cmd => cmd
-            .setName("delete")
-            .setDescription("Delete your saved note file.")
-          )
-        ),
+      data: utilImports,
       usage: "utility <command>",
       category: "utility",
       permissions: ["Use Application Commands", "Send Messages", "Embed Links"]

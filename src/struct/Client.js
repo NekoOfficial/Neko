@@ -14,7 +14,7 @@ const Util = require("./util/Util")
 const Collections = require(`./util/Collections`);
 const Poster = require(`./util/Topgg`);
 const AniSchedule = require(`./anime/AniSchedule`)
-const Manager = require("./util/Player.js");
+// const Manager = require("./util/Player.js");
 // Utilities
 const processEvents = require(`${process.cwd()}/src/util/event`);
 const schema = require(`${process.cwd()}/src/util/schema`);
@@ -31,7 +31,7 @@ class NekoClient extends Client {
     this.commands = new Collection();
     this.collections = new Collections();
     this.poster = new Poster(this)
-    this.manager = new Manager(this);
+    // this.manager = new Manager(this);
     this.config = settings;
     this.dbClient = null;
     this.db = null;
