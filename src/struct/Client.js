@@ -97,19 +97,19 @@ class NekoClient extends Client {
 
   // Event loader
   loadEvent() {
-    const eventpath = `${process.cwd()}/src/events/Discord`;
+    const eventpath = `${process.cwd()}/src/events`;
     const eventdir = fs.readdirSync(eventpath);
     for (const dir of eventdir.filter(x => !x.startsWith("_"))) {
       const file = require(join(eventpath, dir));
       this.on(dir.split(".")[0], file.bind(null, this));
     }
 
-    const musicpath = `${process.cwd()}/src/events/Lavalink`;
+    /* const musicpath = `${process.cwd()}/src/events/Lavalink`;
     const musicdir = fs.readdirSync(musicpath);
     for (const dir of musicdir.filter(x => !x.startsWith("_"))) {
       const file = require(join(musicpath, dir));
       this.manager.on(dir.split(".")[0], file.bind(null, this));
-    }
+    } */
     return this.util.success(`Loaded ${eventdir.length + musicdir.length} events`, "[Event]");
   }
 
