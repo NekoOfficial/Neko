@@ -1,5 +1,5 @@
 const Command = require(`${process.cwd()}/src/struct/cmd/Command`);
-const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder, AttachmentBuilder } = require("discord.js")
 const fetch = require("node-fetch")
 const { funImports } = require("../util/imports");
 
@@ -121,6 +121,46 @@ module.exports = class Fun extends Command {
 
         i.editReply({ content: truth })
         break;
+      case "pooh":
+        const normal = i.options.getString("normal");
+        const pro = i.options.getString("pro");
+
+        const poohres = await fetch(`https://api.popcatdev.repl.co/pooh?text1=${normal}&text2=${pro}`);
+        const poohmeme = new AttachmentBuilder(await poohres.buffer(), { name: "pooh.jpg" });
+        const poohembed = new EmbedBuilder()
+          .setDescription(`Yup, that's the definite way.`)
+          .setImage("attachment://pooh.jpg").setTimestamp().setColor("#fcff57")
+          .setFooter({ text: "Powered by PopCat API", iconURL: i.member.user.displayAvatarURL() });
+        // Send it
+        i.editReply({ embeds: [poohembed], files: [poohmeme] });
+        break;
+      case "drake":
+        const no = i.options.getString("no");
+        const yes = i.options.getString("yes");
+
+        const drakeres = await fetch(`https://frenchnoodles.xyz/api/endpoints/drake?text1=${no}&text2=${yes}`);
+        const drakememe = new AttachmentBuilder(await drakeres.buffer(), { name: "drake.jpg" });
+        const drakeembed = new EmbedBuilder()
+          .setDescription(`Ah, finally. Brilliant.`)
+          .setImage("attachment://drake.jpg").setTimestamp().setColor("#fcff57")
+          .setFooter({ text: "Powered by PopCat API", iconURL: i.member.user.displayAvatarURL() });
+        // Send it
+        i.editReply({ embeds: [drakeembed], files: [drakememe] });
+        break;
+      case "aliens":
+        const top = i.options.getString("top");
+        const bottom = i.options.getString("bottom");
+
+        const alienres = await fetch(`https://apimeme.com/meme?meme=Ancient-Aliens&top=${encodeURIComponent(top)}&bottom=${encodeURIComponent(bottom)}`);
+        const alienmeme = new AttachmentBuilder(await alienres.buffer(), { name: "aliens.jpg" });
+        const alienembed = new EmbedBuilder()
+          .setDescription(`Yeah.`)
+          .setImage("attachment://aliens.jpg").setTimestamp().setColor("#fcff57")
+          .setFooter({ text: "Powered by MemeAPI", iconURL: i.member.user.displayAvatarURL() });
+        // Send it
+        i.editReply({ embeds: [alienembed], files: [alienmeme] });
+        break;
     }
   }
 }
+  
