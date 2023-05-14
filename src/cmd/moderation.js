@@ -50,60 +50,6 @@ module.exports = class Mod extends Command {
             i.editReply({ content: `Because you said no to notification, I'm not going to notify them!\n\nBy the way, they're having their **${client.util.ordinalize(user.settings.infraction)} warning**.` }).then(msg => setTimeout(() => msg.delete(), 5000)) :
           i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
-    // This is equivalent to "mute" - what we used to do before timeout released.
-    // Discord handled a HUGE part of this command, so I love this feature and will use it instead of muting
-    } else if (sub == "timeout") {
-      const time = i.options.getInteger("time") * 60000;
-      // If time is less than 0 or more than 28 days
-      if (0 > time > (40320 * 60000)) return i.editReply({ content: "That's not a valid time, baka. Set something between **1 minute** and **40,320 minutes (28 days)**." });
-      // Now off we go to the basic steps
-      // Increment base
-      const increment = user.settings.infraction + 1;
-      // Check if user is actually valid
-      // Preventing dead case like a sudden leave - leaves a huge mistake behind.
-      if (!user) return i.editReply({ content: "Hey, they're not here. I can't see them around!" });
-      // Now check if the specified user is actually the author
-      if (user.id == i.member.user.id) return i.editReply({ content: "Baka, don't you dare. You're a weird person." });
-      // Now check if the specified user is actually the guild owner
-      if (user.id == i.guild.ownerId) return i.editReply({ content: "You baka, that's not a funny joke! You can't do that!" });
-      // Now check if the specified user has a higher position than them
-      if ((await i.guild.members.fetch(i.user.id)).roles.highest.position <= user.roles.highest.position) return i.editReply({ content: "Hey, you can't do that to someone who has a higher position than you, baka." });
-      // Now check if the specified user is a bot
-      if ((await i.guild.members.fetch(user.id)).bot) return i.editReply({ content: "I don't see why bots need to be punished! Don't do that!" });
-      // Now check if the specified user is... itself
-      if (user.id == client.user.id) return i.editReply({ content: "You dare?!" });
-
-      // To the reason field
-      // Honestly let's just limit the length - no need to check for gibberish content
-      // It could be a joke, right?
-      if (reason < 5 || reason > 500) return i.editReply({ content: "Hey, please maintain a reasonable length for the reason! The current limit is `more than 5 and less than 500 characters`." });
-      // Now try to save "the thing"
-      // First, safety step
-      // Initialize the user settings in the database first if it doesn't exist yet
-      if (!user.settings) user.update({ infraction: 0, infraction_data: [] });
-      const muteObj = (user.settings.infraction_data).concat([{ infractionBy: i.member.user.id, reason: reason, type: "TIMEOUT", at: Math.round(+new Date / 1000) }]);
-      await user.update({ infraction: increment, infraction_data: [...new Set(muteObj)] }).then(() => {
-        // Confirm the update info
-        (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
-          i.editReply({ content: `<@${user.id}>, this is your **${client.util.ordinalize(user.settings.infraction)}** infraction! You've been **timed out** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason + `, for ${time / 60000} minute(s).`}\`\`\`` }) :
-          i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
-      });
-      // We do this after confirmation to avoid dead cases
-      user.timeout(time, reason);
-    } else if (sub == "untimeout") {
-      // Check if user is actually valid
-      if (!user) return i.editReply({ content: "Hey, they're not here. I can't see them around!" });
-      // Now check if the specified user is actually the guild owner
-      if (user.id == i.guild.ownerId) return i.editReply({ content: "Baka, you can't even time out them." });
-      // Now check if the specified user has a higher position than them
-      if ((await i.guild.members.fetch(i.user.id)).roles.highest.position <= user.roles.highest.position) return i.editReply({ content: "It's just that you can't - you can't help them because their role is higher." });
-      // Now check if they're timed out
-      // W... What a long name though
-      if (!user.communicationDisabledUntilTimestamp) return i.editReply({ content: "Baka, they're not timed out." });
-
-      user.timeout(null).then(() => {
-        i.editReply({ content: `Removed timeout for <@${user.id}>!` })
-      })
     } else if (sub == "ban") {
       // First, safety step
       if (!user.settings) user.update({ infraction: 0, infraction_data: [] });
