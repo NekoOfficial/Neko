@@ -1,6 +1,6 @@
 {
   "name": "neko",
-  "version": "0.5-alpha",
+  "version": "0.55",
   "description": "A random Discord bot.",
   "main": "main.js",
   "scripts": {
