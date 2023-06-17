@@ -159,7 +159,7 @@ module.exports = class Eval extends Command {
           .setFooter({ text: "Helpful things for you, sensei!", iconURL: i.member.user.displayAvatarURL() })
           .setColor(type == "Issue" ? "Red" : "ffc0cb")
           .setTimestamp()
-          .setDescription(`*Sent by **${i.member.user.tag}** from **${i.guild.name}***\n\n**Description:** ${query ? query : "None"}\n**Image:** ${attachment ? "" : "None"}`)
+          .setDescription(`*Sent by **${i.member.user.properTag()}** from **${i.guild.name}***\n\n**Description:** ${query ? query : "None"}\n**Image:** ${attachment ? "" : "None"}`)
         if (query && !attachment) {
           // Check if the feedback is too short or too long
           if (query.length > 1000 || query.length < 50) {

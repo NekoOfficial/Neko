@@ -32,10 +32,10 @@ module.exports = class Utility extends Command {
       });
       // Reply
       const embed = new EmbedBuilder()
-        .setAuthor({ name: `${user.tag}'s Avatar` })
+        .setAuthor({ name: `${user.properTag()}'s Avatar` })
         .setImage(img(2048)).setTimestamp().setColor("#fcff57")
         .setDescription(`Quality: [x128](${img(128)}) | [x256](${img(256)}) | [x512](${img(512)}) | [x1024](${img(1024)}) | [x2048](${img(2048)})`)
-        .setFooter({ text: `Requested by ${i.member.user.tag}`, iconURL: i.member.user.displayAvatarURL() });
+        .setFooter({ text: `Requested by ${i.member.user.properTag()}`, iconURL: i.member.user.displayAvatarURL() });
       i.editReply({ embeds: [embed] });
     } else if (sub == "banner") {
       const user = i.options.getUser("member")
@@ -51,10 +51,10 @@ module.exports = class Utility extends Command {
       });
       // Reply
       const embed = new EmbedBuilder()
-        .setAuthor({ name: `${user.tag}'s Banner` })
+        .setAuthor({ name: `${user.properTag()}'s Banner` })
         .setImage(img(2048)).setTimestamp().setColor("#fcff57")
         .setDescription(`Quality: [x128](${img(128)}) | [x256](${img(256)}) | [x512](${img(512)}) | [x1024](${img(1024)}) | [x2048](${img(2048)})`)
-        .setFooter({ text: `Requested by ${i.member.user.tag}`, iconURL: i.member.user.displayAvatarURL() });
+        .setFooter({ text: `Requested by ${i.member.user.properTag()}`, iconURL: i.member.user.displayAvatarURL() });
       i.editReply({ embeds: [embed] });
     } else if (sub == "channel") {
       const channel = i.options.getChannel("channel");
@@ -84,7 +84,7 @@ module.exports = class Utility extends Command {
         .setAuthor({ name: `${channel.name}${channel.name.endsWith("s") ? "'" : "'s"} Information` })
         .setThumbnail(icon)
         .setColor("#fcff57")
-        .setFooter({ text: `Requested by ${i.user.tag}`, iconURL: i.user.avatarURL({ dynamic: true }) })
+        .setFooter({ text: `Requested by ${i.user.properTag()}`, iconURL: i.user.avatarURL({ dynamic: true }) })
         .setTimestamp()
         .addFields([
           { name: '• Position', value: `${channel.position + 1 == "NaN" ? channel.position + 1 : "Unknown"}` },
@@ -114,7 +114,7 @@ module.exports = class Utility extends Command {
         .setURL(data.html_url)
         .setThumbnail(data.owner.avatar_url)
         .setColor("#fcff57")
-        .setFooter({ text: `Requested by ${i.user.tag}`, iconURL: i.user.avatarURL({ dynamic: true }) })
+        .setFooter({ text: `Requested by ${i.user.properTag()}`, iconURL: i.user.avatarURL({ dynamic: true }) })
         .setTimestamp()
         .setDescription(
           `${data.fork ? `***Forked** from **[${data.parent.full_name}](${data.parent.html_url})**.*` : "*Parent repository.*"}\n\n` +
@@ -222,7 +222,7 @@ module.exports = class Utility extends Command {
         .setTitle(`${data.name}`)
         .setURL(`https://www.npmjs.com/package/${data.name}`)
         .setColor("#fcff57")
-        .setFooter({ text: `Requested by ${i.user.tag}`, iconURL: i.user.avatarURL({ dynamic: true }) })
+        .setFooter({ text: `Requested by ${i.user.properTag()}`, iconURL: i.user.avatarURL({ dynamic: true }) })
         .setTimestamp()
         .setDescription(
           `${client.util.textTruncate(data.description, 75)}\n\n` +
@@ -253,11 +253,11 @@ module.exports = class Utility extends Command {
       const embed = new EmbedBuilder()
         .setAuthor({ name: `${i.guild.name}`, iconURL: icon })
         .setColor("#fcff57")
-        .setFooter({ text: `Requested by ${i.user.tag}`, iconURL: i.user.avatarURL({ dynamic: true }) })
+        .setFooter({ text: `Requested by ${i.user.properTag()}`, iconURL: i.user.avatarURL({ dynamic: true }) })
         .setTimestamp()
         .setDescription(
           `*${i.guild.description == null ? "Server has no description." : i.guild.description}*\n\n` +
-          `**• Owner:** [${owner.tag}](https://discord.com/users/${owner.id})\n` +
+          `**• Owner:** [${owner.properTag()}](https://discord.com/users/${owner.id})\n` +
           `**• Channels:** ${text} text \| ${voice} voice \| ${category} ${category > 1 ? " categories" : " category"} \| ${news} news\n` +
           `**• Role Count:** ${i.guild.roles.cache.size}\n` +
           `**• Emoji Count:** ${i.guild.emojis.cache.size}\n` +
@@ -281,7 +281,7 @@ module.exports = class Utility extends Command {
         .setColor("#fcff57")
         .setTitle(`Definition of ${definition.word}`)
         .setURL(definition.urbanURL)
-        .setFooter({ text: `Requested by ${i.user.tag}`, iconURL: "https://files.catbox.moe/kkkxw3.png" })
+        .setFooter({ text: `Requested by ${i.user.properTag()}`, iconURL: "https://files.catbox.moe/kkkxw3.png" })
         .addFields([
           {
             name: 'Definition', value: i.channel.nsfw === true || i.channel.nsfw === undefined

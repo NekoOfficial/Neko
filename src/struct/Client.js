@@ -116,7 +116,7 @@ class NekoClient extends Client {
   // On ready, do these
   onReady() {
     this.ready = true;
-    this.util.success(`Logged in as ${this.user.tag}`, "[Client]");
+    this.util.success(`Logged in as ${this.user.properTag()}`, "[Client]");
   }
 
   // Initilize everything and log us in

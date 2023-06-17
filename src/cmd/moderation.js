@@ -46,7 +46,7 @@ module.exports = class Mod extends Command {
         // Confirm the update info
         (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
           (i.options.getBoolean("notify")) ?
-            i.editReply({ content: `<@${user.id}>, this is your **${client.util.ordinalize(user.settings.infraction)}** infraction! You've been **warned** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }) :
+            i.editReply({ content: `<@${user.id}>, this is your **${client.util.ordinalize(user.settings.infraction)}** infraction! You've been **warned** by **${i.member.user.properTag()}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }) :
             i.editReply({ content: `Because you said no to notification, I'm not going to notify them!\n\nBy the way, they're having their **${client.util.ordinalize(user.settings.infraction)} warning**.` }).then(msg => setTimeout(() => msg.delete(), 5000)) :
           i.editReply({ content: "Oh... database said no to information saving, so you might have to do that again.\n\n||Issue didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
@@ -81,7 +81,7 @@ module.exports = class Mod extends Command {
       await user.update({ infraction: increment, infraction_data: [...new Set(banObj)] }).then(() => {
         // Confirm the update info
         (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
-          user.send({ content: `<@${user.id}>, you've been **banned** from **${i.guild.name}** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Hammer has been thrown to <@${user.id}>. Lift it up sometime, sad to see them go.` })) :
+          user.send({ content: `<@${user.id}>, you've been **banned** from **${i.guild.name}** by **${i.member.user.properTag()}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Hammer has been thrown to <@${user.id}>. Lift it up sometime, sad to see them go.` })) :
           i.editReply({ content: "Oh... database said no to information saving, but they should be banned.\n\n||This database error didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
     } else if (sub == "clear") {
@@ -115,21 +115,21 @@ module.exports = class Mod extends Command {
         defaultAutoArchiveDuration: data.defaultAutoArchiveDuration ?? null,
         rtcRegion: data.rtcRegion ?? null,
         videoQualityMode: data.videoQualityMode ?? null,
-        reason: `${i.user.tag}: channel clone`,
+        reason: `${i.user.properTag()}: channel clone`,
       });
       const date = Math.floor(+new Date / 1000);
       if (i.guild.channels.cache.get(message.channelId)) await i.deleteReply();
-      newChannel.send({ content: `*This channel was cloned. Requested by **${i.member.user.tag}**, on **<t:${date}:F>***` })
+      newChannel.send({ content: `*This channel was cloned. Requested by **${i.member.user.properTag()}**, on **<t:${date}:F>***` })
     } else if (sub == "infractions") {
       if (!client.db) return i.editReply({ content: "O-Oh, the database isn't connected. Maybe try again later?" })
       if (!user) /* Safety check */ return i.editReply({ content: "O-Oh, I can't find that user! Have they gone somewhere?" });
       if (user.settings.infraction == 0) return i.editReply({ content: "Aww, good user. They haven't had a single infraction in here." });
       let n = 0;
-      const map = (user.settings.infraction_data.reverse()).map(x => `**#${++n}:** ${client.util.toProperCase(x.type.toLowerCase())}\n**Executed by:** ${(client.users.cache.get(x.infractionBy)).tag}\n**Reason:** ${client.util.truncate(x.reason, 100, "...")}\n**At:** ${x.at ? `<t:${x.at}:F>` : "Unknown time"}`)
+      const map = (user.settings.infraction_data.reverse()).map(x => `**#${++n}:** ${client.util.toProperCase(x.type.toLowerCase())}\n**Executed by:** ${(client.users.cache.get(x.infractionBy)).properTag()}\n**Reason:** ${client.util.truncate(x.reason, 100, "...")}\n**At:** ${x.at ? `<t:${x.at}:F>` : "Unknown time"}`)
       const paginate = client.util.page(map, 5); // For specific paginations like this use a simpler utility
       let { results, page, pages } = paginate;
       const embed = new EmbedBuilder()
-        .setAuthor({ name: `${user.user.tag}'s rapsheet` })
+        .setAuthor({ name: `${user.user.properTag()}'s rapsheet` })
         .setThumbnail(user.displayAvatarURL())
         .setDescription(`*Order type: Youngest to oldest infractions.*\n\n${results[page - 1]}`)
         .setColor("#fcff57")
@@ -191,7 +191,7 @@ module.exports = class Mod extends Command {
       await user.update({ infraction: increment, infraction_data: [...new Set(kickObj)] }).then(() => {
         // Confirm the update info
         (i.member.user.id == user.settings.infraction_data[0].infractionBy) ?
-          user.send({ content: `<@${user.id}>, you've been **kicked** from **${i.guild.name}** by **${i.member.user.tag}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Well, that was a pretty painful kick. <@${user.id}>, sad to see you go.` })) :
+          user.send({ content: `<@${user.id}>, you've been **kicked** from **${i.guild.name}** by **${i.member.user.properTag()}** for this reason:\n\n\`\`\`fix\n${reason}\`\`\`` }).then(() => i.editReply({ content: `Well, that was a pretty painful kick. <@${user.id}>, sad to see you go.` })) :
           i.editReply({ content: "Oh... database said no to information saving, but they should be kicked.\n\n||This database error didn't resolve in an hour? Use `/bot feedback` to notice my sensei!||" })
       });
     } else if (sub == "unban") {
@@ -204,7 +204,7 @@ module.exports = class Mod extends Command {
       if (!banned) return i.editReply({ content: "Baka, they're not banned." });
       await i.guild.members.unban(userID);
       const date = Math.floor(+new Date / 1000); const user = await client.users.fetch(userID)
-      i.editReply({ content: `**${user.username + "#" + user.discriminator}** has been unbanned by **${i.member.user.tag}** on <t:${date}:F>.` })
+      i.editReply({ content: `**${user.username + "#" + user.discriminator}** has been unbanned by **${i.member.user.properTag()}** on <t:${date}:F>.` })
     } else if (sub == "unwarn") {
       // Get the option
       const type = i.options.getString("type");

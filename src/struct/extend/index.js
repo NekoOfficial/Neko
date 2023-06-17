@@ -32,5 +32,6 @@ Object.defineProperties(User.prototype, {
   blacklisted: { get: user.blacklisted },
   update: { value: user.update },
   syncSettings: { value: user.syncSettings },
-  syncSettingsCache: { value: user.syncSettingsCache }
+  syncSettingsCache: { value: user.syncSettingsCache },
+  properTag: { value: user.properTag }
 });

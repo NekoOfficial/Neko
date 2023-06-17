@@ -5,6 +5,18 @@ const settings = function () {
   return this.client.settings[this.id === this.client.user.id ? "client" : "user"].getDefaults(this.id);
 };
 
+// Discord is enforcing a new username system - removing discriminator
+// This is making the discriminator turning into 0s - that's bad, and we need to fix it
+// D.js v14.12 has this, but we'll just implement one here
+const properTag = function () {
+  let propTag;
+  // Check if the discrim part is 0...
+  if (this.tag.toString().split('#')[1] != "0") propTag = this.tag; 
+  // ...if it is, we just take the username
+  else propTag = this.tag.toString().split('#')[0];
+  return propTag;
+};
+
 /**
  * Check if this user is the bot owner.
  * @returns {Boolean}
@@ -52,5 +64,6 @@ module.exports = {
   blacklisted,
   update,
   syncSettings,
-  syncSettingsCache
+  syncSettingsCache,
+  properTag
 };
