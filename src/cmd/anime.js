@@ -167,7 +167,7 @@ module.exports = class Eval extends Command {
         // If we can't find it, reply.
         if (!r) return i.editReply({ content: "O-Oh, I don't remember seeing this. They told me they haven't, either.\n\n||Maybe fix your query?||" });
         // If result is NSFW and channel is not, reply.
-        if (r.nsfw && i.channel.nsfw) return i.editReply({ content: "Uh, that's NSFW and you're not in a NSFW channel. I'm not allowed to send that here!" });
+        if (r.nsfw && !i.channel.nsfw) return i.editReply({ content: "Uh, that's NSFW and you're not in a NSFW channel. I'm not allowed to send that here!" });
         // If result has "Nudity" or "Mature" (according to Kitsu.io) in its age rating guide and channel is not NSFW, reply.
         if (r.ageRatingGuide && (r.ageRatingGuide.includes("Nudity") || r.ageRatingGuide.includes("Mature")) && !i.channel.nsfw) return i.editReply({ content: "Uh, that has something to do with NSFW and you're not in a NSFW channel. I'm not allowed to send that here!" });
         // Now make our embed
