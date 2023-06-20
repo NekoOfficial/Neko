@@ -41,7 +41,7 @@ module.exports = class Eval extends Command {
     // rewrite
     if (sub == "watching") {
       if (!client.db) return i.editReply({ content: "The database is not connected at the moment, maybe try again later?\n\n||Issue didn't resolve for more than an hour? Use `/bot feedback` to notice my sensei!||" });
-      if (!i.guild.settings.anisched_data.length) return i.editReply({ content: "Baka, this server has no anime subsriptions." });
+      if (!i.guild.settings.anisched_data.length) return i.editReply({ content: "Baka, this server has no anime subscriptions." });
       const entries = [];
       const watched = i.guild.settings.anisched_data;
       let page = 0
@@ -51,7 +51,7 @@ module.exports = class Eval extends Command {
         if (res.errors) {
           return i.editReply({ content: "O-Oh, AniList returned an error. Maybe try again later?\n\n||Issue didn't resolve for more than an hour? Use `/bot feedback` to notice my sensei!||" });
         } else if (!entries.length && !res.data.Page.media.length) {
-          return i.editReply({ content: "Baka, this server has no anime subsriptions." });
+          return i.editReply({ content: "Baka, this server has no anime subscriptions." });
         } else {
           page = res.data.Page.pageInfo.currentPage + 1;
           hasNextPage = res.data.Page.pageInfo.hasNextPage;
@@ -481,7 +481,7 @@ module.exports = class Eval extends Command {
       // Check channel
       if (!i.channel.nsfw) return i.editReply({ content: "You baka, move to an NSFW channel to do that." });
       const attachment = i.options.getAttachment("image");
-      if (!String(attachment.url).match(/\.(jpeg|jpg|png)$/)) return i.editReply({ content: "Baka, that's not a valid image type. We only support **JPEG**, **JPG** and **PNG**." });
+      if (!String(attachment.url).match(/\.(jpg|png)$/)) return i.editReply({ content: "Baka, that's not a valid image type. We only support **JPG** and **PNG**." });
       sauce.find({ url: attachment.url }).then((sauceData) => {
         const results = sauceData.results[0].data.ext_urls;
         const source = sauceData.results[0].data.source;
