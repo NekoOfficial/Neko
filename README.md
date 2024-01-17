@@ -1,10 +1,17 @@
-<h1 align="center"><img src='https://cdn.discordapp.com/avatars/704992714109878312/0a62ef2163c178dd3a0572c1cd5e79f1.webp?size=128' height='100'><br>Neko</br></h1>
+<h1 align="center"><img src='https://cdn.discordapp.com/avatars/704992714109878312/fd49d4d9006710f8b9b5bdc027e6440a.png?size=128' height='100'><br>Neko</br></h1>
 <p align="center">A multi-purpose bot to spice up your Discord experiences<br>Focus mainly on Anime, Music and Moderation</br></p>
 <p align="center">
   <a href="http://forthebadge.com/">
     <img src="https://i.imgur.com/ILXQBgP.png"/>
   </a>
 </p>
+
+---
+###### 🕒 1/17/2024
+### 📢 Outdated source code
+I'm currently working on a brand new rewrite of Neko and most of the commands from this repo have been rewritten to update along with the APIs I use. Therefore, it is not reliable anymore. However, structure files are still usable.
+
+The new rewrite will be open-sourced in this organization, so stay tuned for that.
 
 ## About this project
 
@@ -18,7 +25,7 @@ This code works for me, if you have any issues trying to run a modified version 
 
 The database system of this bot was inspired from ravener/miyako, which I felt impressive and clean to use since it is more convenient to update stuff using `mongodb` rather than just using `mongoose`, it sucks. I had nightmares using it.
 
-There's no documentation or whatsoever currently on how to use the commands and stuff but that's for the future. For now I'll let slash commands' description to do its job: to guide people through the commands instead of me making a pointless documentation for it.
+There's no documentation or whatsoever currently on how to use the commands and stuff but that's for the future. For now I'll let slash commands' description do its job: to guide people through the commands instead of me making a pointless documentation for it.
 
 ---
 
